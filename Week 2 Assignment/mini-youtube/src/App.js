@@ -1,29 +1,64 @@
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes
+} from "react-router-dom";
+
 import logo from './logo.svg';
 import './App.css';
 import Navbar from './components/Navbar.jsx';
-import VideoCard from './components/VideoCard.jsx';
+import Timer from './components/Timer.jsx';
+import Home from './pages/Home.jsx';
+import WatchLater from './pages/WatchLater.jsx';
+
+
+
+
 
 function App() {
+  let [WL, setWL] = useState([]);
+  let [L, setL] = useState([]);
+  let [tag, setTag] = useState(""); // should be a string, not an array
+
   return (
-    <div className="App">
-      <Navbar count={1} />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <VideoCard />
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar count={WL.length} logo={logo} tag={tag} setTag={setTag} />
+        <header className="App-header">
+          <Routes>
+              <Route
+                path="/watch-later"
+                element={
+                  <WatchLater
+                    valueWL={WL}
+                    onChangeWL={setWL}
+                    valueL={L}
+                    onChangeL={setL}
+                  />
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <Home
+                    valueWL={WL}
+                    onChangeWL={setWL}
+                    valueL={L}
+                    onChangeL={setL}
+                    tag={tag}
+                    setTag={setTag}
+                  />
+                }
+              />
+          </Routes>
+        </header>
+        <Timer />
+      </div>
+    </Router>
   );
 }
+
+// The App component serves as the main entry point for the application
 
 export default App;
