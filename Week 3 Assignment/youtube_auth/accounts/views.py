@@ -94,11 +94,8 @@ def register_view(request):
             user = form.save(commit=False)
             user.is_active = True
             user.save()
-            user_profile = UserProfile.objects.create(
-                user=user,
-                email_verified=False,
-                email_ID=user.email  # Save email to email_ID field
-            )
+            UserProfile.objects.create(user=user, email_verified=False)
+            # Simulate sending verification email
             token = get_random_string(32)
             user_profile.verification_token = token
             user_profile.save()

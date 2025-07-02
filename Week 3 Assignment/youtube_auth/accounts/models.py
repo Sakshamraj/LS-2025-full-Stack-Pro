@@ -8,6 +8,9 @@ class UserProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     email_ID = models.TextField(max_length=180, blank=True, null=True)
+
+    last_login = models.DateTimeField(auto_now=True)
+    email_ID = models.TextField(max_length=180, blank=True, null=True)
     search_fields = models.TextField(
         blank=True,
         help_text="Comma-separated fields the user prefers to search by, including those searched via the navbar."
