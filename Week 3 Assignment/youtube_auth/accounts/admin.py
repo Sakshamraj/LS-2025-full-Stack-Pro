@@ -13,15 +13,15 @@ from .models import UserProfile, OtherModel  # Add all relevant models here
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'email_verified', 'created_at')  # Adjust fields as per your model
-    search_fields = ('user__username', 'user__email')
+    list_display = ('id', 'user', 'email_verified', 'email_ID', 'last_login', 'created_at')
+    search_fields = ('user__username', 'user__email', 'email_ID')
     ordering = ('-created_at',)
     fieldsets = (
         ('User Info', {
-            'fields': ('user', 'email_verified')
+            'fields': ('user', 'email_verified', 'email_ID')
         }),
         ('Timestamps', {
-            'fields': ('created_at',)
+            'fields': ('created_at', 'last_login')
         }),
     )
 

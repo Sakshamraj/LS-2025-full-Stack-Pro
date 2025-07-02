@@ -5,9 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .forms import RegisterForm, LoginForm
+from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
-
-token_map = {}  # Simulate token storage (in-memory for demo)
 
 def home(request):
     """
@@ -34,6 +33,15 @@ def login_view(request):
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            # Check if the user's email is verified
+            try:
+                profile = UserProfile.objects.get(user=user)
+                if not profile.email_verified:
+                    messages.error(request, 'Please verify your email before logging in.')
+                    return render(request, 'login.html', {'form': form})
+            except UserProfile.DoesNotExist:
+                messages.error(request, 'User profile not found. Contact support.')
+                return render(request, 'login.html', {'form': form})
             login(request, user)
             messages.success(request, 'Login successful!')
             return redirect('dashboard')
@@ -64,12 +72,15 @@ def register_view(request):
             user = form.save(commit=False)
             user.is_active = True
             user.save()
-            UserProfile.objects.create(user=user, email_verified=False)
-            # Simulate sending verification email
+            user_profile = UserProfile.objects.create(user=user, email_verified=False)
             token = get_random_string(32)
-            token_map[token] = user.username
+            user_profile.verification_token = token
+            user_profile.save()
+            verification_link = request.build_absolute_uri(f'/verify/{token}/')
+            # Simulate email by printing to console
+            print(f'<div class="alert alert-success" role="alert">Simulated email verification link: <a href="{verification_link}">{verification_link}</a></div>')
             messages.success(request, 'Registration successful! Please verify your email.')
-            return redirect('verify', token=token)
+            # Redirect to the verification page directly (simulate email click)
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -81,15 +92,13 @@ def verify_view(request, token=None):
     Render the verification page.
     If the user is already authenticated, redirect to the dashboard.
     """
-    username = token_map.get(token)
-    if username:
-        user = User.objects.get(username=username)
-        profile = UserProfile.objects.get(user=user)
-        profile.email_verified = True
-        profile.save()
+    try:
+        profile = UserProfile.objects.get(verification_token=token)
+        if not profile.email_verified:
+            profile.email_verified = True
+            profile.save()
         messages.success(request, 'Account Verified Successfully!')
-        del token_map[token]
-    else:
-        messages.error(request, 'Invalid or expired verification link.')
-    return render(request, 'verify.html')
+        return render(request, 'verify.html')  # Show success
+    except UserProfile.DoesNotExist:
+        return render(request, 'verify.html', {'error': 'Invalid or expired token.'})
 

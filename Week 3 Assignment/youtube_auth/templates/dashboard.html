@@ -5,9 +5,62 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h1>Welcome, {{ request.user.username }}!</h1>
-        <p class="lead">This is your protected dashboard.</p>
-        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow p-4 w-100" style="max-width: 500px;">
+        <div class="text-center mb-3">
+            <h1 class="mb-2">Welcome, {{ request.user.username }}!</h1>
+        </div>
+        <p class="lead text-center">This is your protected dashboard.</p>
+        <div class="mb-4">
+            <h5>Your Profile Info</h5>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Email:</strong> {{ request.user.email }}</li>
+                <li class="list-group-item"><strong>Email ID (saved):</strong> {{ request.user.userprofile.email_ID }}</li>
+                <li class="list-group-item"><strong>Email Verified:</strong> {{ request.user.userprofile.email_verified }}</li>
+            </ul>
+        </div>
+
+        {% if edit_mode %}
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="list_display" class="form-label">List Display Fields <span class="text-muted small">(Choose how you want your data displayed: e.g., Table, Cards, or Minimal)</span></label>
+                <div class="form-text">Display type:
+                    <label class="ms-2"><input type="radio" name="display_type" value="table" {% if display_type == 'table' %}checked{% endif %}> Table</label>
+                    <label class="ms-2"><input type="radio" name="display_type" value="cards" {% if display_type == 'cards' %}checked{% endif %}> Cards</label>
+                    <label class="ms-2"><input type="radio" name="display_type" value="minimal" {% if display_type == 'minimal' %}checked{% endif %}> Minimal</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="ordering" class="form-label">Ordering</label>
+                <select class="form-select" name="ordering" id="ordering">
+                    <option value="-created_at" {% if ordering == '-created_at' %}selected{% endif %}>Newest First</option>
+                    <option value="created_at" {% if ordering == 'created_at' %}selected{% endif %}>Oldest First</option>
+                    <option value="user" {% if ordering == 'user' %}selected{% endif %}>User</option>
+                </select>
+            </div>
+            <button type="submit" name="save_prefs" class="btn btn-primary w-100">Save Preferences</button>
+        </form>
+        <form method="post" action="" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" name="cancel_edit" class="btn btn-link w-100">Cancel</button>
+        </form>
+        {% else %}
+        <div class="mb-3">
+            <h6>Saved Preferences</h6>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Display Type:</strong> {{ display_type|title }}</li>
+                <li class="list-group-item"><strong>Ordering:</strong> {{ ordering }}</li>
+            </ul>
+        </div>
+        <form method="post" action="">
+            {% csrf_token %}
+            <button type="submit" name="edit_prefs" class="btn btn-outline-primary w-100">Edit List Display Fields & Ordering</button>
+        </form>
+        {% endif %}
+        <div class="d-flex justify-content-center mt-4">
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
     </div>
+</div>
 {% endblock %}
