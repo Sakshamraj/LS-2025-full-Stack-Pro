@@ -9,6 +9,13 @@ from django.utils.crypto import get_random_string
 
 token_map = {}  # Simulate token storage (in-memory for demo)
 
+def home(request):
+    """
+    Render the home page.
+    If the user is authenticated, redirect to the dashboard.
+    """
+    return render(request, 'base.html')
+
 @login_required
 def dashboard(request):
     """

@@ -1,8 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
     {% block title %}
     <title>YouTube Clone</title>
     {% endblock %}
@@ -10,22 +14,38 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">Mini YouTube</a>
+        <a class="navbar-brand" href="/">
+          Mini YouTube
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Watch Later</a>
+              <a class="nav-link" href="/watch-later">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="18"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+                Watch Later
+              </a>
             </li>
           </ul>
-          <ul class="navbar-nav mb-2 mb-lg-0">
+          <form class="d-flex" role="search">
+            <div class="input-group">
+              <input type="search" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon1" />
+              <button class="input-group-text icon-link icon-link-hover" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="18">
+                  <path class="fa-secondary" d="M208 64a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm0 352A208 208 0 1 0 208 0a208 208 0 1 0 0 416z"/>
+                  <path class="fa-primary" d="M330.7 376L457.4 502.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L376 330.7C363.3 348 348 363.3 330.7 376z"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+          <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
             {% if user.is_authenticated %}
               <li class="nav-item">
                 <span class="navbar-text me-2">Hello, {{ user.username }}!</span>
