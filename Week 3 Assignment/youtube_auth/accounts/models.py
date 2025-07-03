@@ -8,7 +8,12 @@ class UserProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     email_ID = models.TextField(max_length=180, blank=True, null=True)
-
+    search_fields = models.TextField(
+        blank=True,
+        help_text="Comma-separated fields the user prefers to search by, including those searched via the navbar."
+    )
+    display_type = models.CharField(max_length=20, default='table')
+    ordering = models.CharField(max_length=50, default='-created_at')
 
     def __str__(self):
         return self.user.username
