@@ -125,8 +125,8 @@ def register_view(request):
             )
             # Simulate sending verification email
             token = get_random_string(32)
-            user_profile.verification_token = token
-            user_profile.save()
+            user.verification_token = token
+            user.save()
             verification_link = request.build_absolute_uri(f'/verify/{token}/')
             # Simulate email by printing to console
             print(f'<div class="alert alert-success" role="alert">Simulated email verification link: <a href="{verification_link}">{verification_link}</a></div>')
