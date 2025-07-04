@@ -20,31 +20,7 @@ def dashboard(request):
     """
     Render the dashboard page and handle user preferences for list_display, search_fields, ordering, and display_type.
     Also handle editing the email_ID field.
-    Render the dashboard page and handle user preferences for list_display, search_fields, ordering, and display_type.
-    Also handle editing the email_ID field.
     """
-    user_profile = UserProfile.objects.get(user=request.user)
-    edit_mode = False
-    if request.method == 'POST':
-        if 'edit_prefs' in request.POST:
-            edit_mode = True
-        elif 'save_prefs' in request.POST:
-            user_profile.display_type = request.POST.get('display_type', 'table')
-            user_profile.ordering = request.POST.get('ordering', '-created_at')
-            user_profile.save()
-            messages.success(request, 'Preferences saved!')
-        elif 'cancel_edit' in request.POST:
-            edit_mode = False
-    else:
-        edit_mode = False
-    display_type = user_profile.display_type
-    ordering = user_profile.ordering
-    return render(request, 'dashboard.html', {
-        'display_type': display_type,
-        'ordering': ordering,
-        'edit_mode': edit_mode,
-        'user_profile': user_profile,
-    })
     user_profile = UserProfile.objects.get(user=request.user)
     edit_mode = False
     if request.method == 'POST':
@@ -118,15 +94,14 @@ def register_view(request):
             user = form.save(commit=False)
             user.is_active = True
             user.save()
-            UserProfile.objects.create(
+            user_profile = UserProfile.objects.create(
                 user=user,
                 email_verified=False,
                 email_ID=user.email  # Save email to email_ID field
             )
-            # Simulate sending verification email
             token = get_random_string(32)
-            user.verification_token = token
-            user.save()
+            user_profile.verification_token = token
+            user_profile.save()
             verification_link = request.build_absolute_uri(f'/verify/{token}/')
             # Simulate email by printing to console
             print(f'<div class="alert alert-success" role="alert">Simulated email verification link: <a href="{verification_link}">{verification_link}</a></div>')
