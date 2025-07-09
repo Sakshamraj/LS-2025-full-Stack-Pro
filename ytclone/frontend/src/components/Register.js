@@ -1,28 +1,74 @@
-// Register form component
-import React, { useState } from "react";
-import axios from "../axiosConfig";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API from '../axiosConfig';
+import './Register.css';
 
-const Register = () => {
-  const [form, setForm] = useState({ username: "", password: "" });
+export default function Register() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const submit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    await axios.post("register/", form);
-    navigate("/login");
+    setError('');
+
+    try {
+      const res = await API.post('/auth/register/', {
+        username,
+        email,
+        password,
+      });
+      localStorage.setItem('authToken', res.data.token);
+      navigate('/');
+    } catch (err) {
+      setError('Registration failed. Try another email or password.');
+    }
   };
 
   return (
-    <div className="container">
-      <h2>Register</h2>
-      <form onSubmit={submit}>
-        <input className="form-control my-2" type="text" placeholder="Username" onChange={e => setForm({ ...form, username: e.target.value })} />
-        <input className="form-control my-2" type="password" placeholder="Password" onChange={e => setForm({ ...form, password: e.target.value })} />
-        <button className="btn btn-primary">Register</button>
-      </form>
+    <div className="register-container">
+      <div className="register-box">
+        <h2 className="logo"><span>▶</span> Create Account</h2>
+        <p className="subtext">to continue to ytclone</p>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <form onSubmit={handleRegister} className="register-form">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Create password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="register-btn">
+            Create Account
+          </button>
+        </form>
+
+        <p className="login-link">
+          Already have an account? <a href="/login">Sign in</a>
+        </p>
+      </div>
     </div>
   );
-};
-
-export default Register;
+}

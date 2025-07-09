@@ -1,0 +1,81 @@
+
+.navbar {
+  background-color: #fff;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.navbar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #FF0000; /* YouTube red */
+  text-decoration: none;
+}
+
+
+.navbar input[type="text"] {
+  height: 36px;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 16px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+
+.navbar button.search-btn {
+  height: 36px;
+  width: 60px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0 20px 20px 0;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.navbar button.search-btn:hover {
+  background-color: #eeeeee;
+}
+
+.navbar .mic-btn {
+  margin-left: 8px;
+  background-color: #f1f1f1;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.navbar .mic-btn:hover {
+  background-color: #e5e5e5;
+}
+.navbar .icon-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 20px;
+  color: #606060;
+}
+
+.navbar .icon-group a,
+.navbar .icon-group svg {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.navbar .icon-group a:hover,
+.navbar .icon-group svg:hover {
+  color: #FF0000;
+}

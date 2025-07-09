@@ -1,140 +1,46 @@
-// Sidebar menu component
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./Sidebar.css";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  MdHome,
+  MdExplore,
+  MdSubscriptions,
+  MdVideoLibrary,
+  MdHistory,
+  MdOutlineVideoCall,
+  MdOutlineWatchLater,
+  MdThumbUp
+} from 'react-icons/md';
 
-const Sidebar = () => {
-  const [expanded, setExpanded] = useState(true);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+import './Sidebar.css';
 
-  // Toggle sidebar expansion
-  const toggleSidebar = () => setExpanded(!expanded);
+export default function Sidebar() {
+  const location = useLocation();
 
-  // Handle screen resizing
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      if (window.innerWidth > 720) {
-        setExpanded(false); // collapsed by default on large
-      } else {
-        setExpanded(true); // expanded by default on small
-      }
-    };
-
-    handleResize(); // Set initial state
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const links = [
+    { to: '/', icon: <MdHome />, label: 'Home' },
+    { to: '/explore', icon: <MdExplore />, label: 'Explore' },
+    { to: '/subscriptions', icon: <MdSubscriptions />, label: 'Subscriptions' },
+    { to: '/library', icon: <MdVideoLibrary />, label: 'Library' },
+    { to: '/history', icon: <MdHistory />, label: 'History' },
+    { to: '/upload', icon: <MdOutlineVideoCall />, label: 'Upload' },
+    { to: '/watch-later', icon: <MdOutlineWatchLater />, label: 'Watch Later' },
+    { to: '/liked', icon: <MdThumbUp />, label: 'Liked Videos' },
+  ];
 
   return (
-    <div className={`sidebar ${expanded ? "expanded" : "collapsed"}`}>
-      <div className="sidebar-item active" onClick={toggleSidebar}>
-        <i className="bi bi-display"></i>
-        {expanded && <span>home</span>}
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-play-btn"></i>
-        {expanded && <span>Watch Later</span>}
-        {expanded && <span className="ms-auto">24</span>}
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-heart"></i>
-        {expanded && <span>Liked Videos</span>}
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-trash"></i>
-        {expanded && <span>History</span>}
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder"></i>
-        {expanded && (
-          <>
-            <span>Subscribed Channel</span>
-            <span className="ms-auto">100+</span>
-          </>
-        )}
-      </div>
-
-      {expanded && <hr className="divider" />}
-      {expanded && <div className="section-title">Your Channel</div>}
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder"></i>
-        {expanded && <span>Dashboard</span>}
-      </div>
-      <div className="sidebar-item">
-        <i className="bi bi-folder"></i>
-        {expanded && <span>Add Video</span>}
-      </div>
-      <div className="sidebar-item">
-        <i className="bi bi-folder"></i>
-        {expanded && <span>Make Playlist</span>}
-      </div>
-    </div>
+    <aside className="sidebar">
+      {links.map((link, index) => (
+        <Link
+          key={index}
+          to={link.to}
+          className={`sidebar-link ${
+            location.pathname === link.to ? 'active' : ''
+          }`}
+        >
+          <span className="icon">{link.icon}</span>
+          <span className="label">{link.label}</span>
+        </Link>
+      ))}
+    </aside>
   );
-};
-
-export default Sidebar;
-
-/*
-import React from "react";
-import "./App.css";
-
-const Sidebar = ({ isExpanded }) => {
-  return (
-    <div className={`sidebar ${isExpanded ? "expanded" : "collapsed"}`}>
-      <div className="sidebar-item active">
-        <i className="bi bi-display" />
-        <span className="label">Home</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-play-btn" />
-        <span className="label">Watch Later</span>
-        <span className="count">24</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-heart" />
-        <span className="label">Liked Videos</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-trash" />
-        <span className="label">History</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder" />
-        <span className="label">Subscribed Channel</span>
-        <span className="count">100+</span>
-      </div>
-
-      <hr className="divider" />
-      <div className="section-title">Your Channel</div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder" />
-        <span className="label">Dashboard</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder" />
-        <span className="label">Add Video</span>
-      </div>
-
-      <div className="sidebar-item">
-        <i className="bi bi-folder" />
-        <span className="label">Make Playlist</span>
-      </div>
-    </div>
-  );
-};
-
-export default Sidebar;
-
-*/
+}

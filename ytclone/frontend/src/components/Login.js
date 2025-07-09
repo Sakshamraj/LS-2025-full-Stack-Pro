@@ -1,33 +1,64 @@
-// Login form component
-import React, { useState } from "react";
-import axios from "../axiosConfig";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API from '../axiosConfig';
+import './Login.css';
 
-const Login = () => {
-  const [form, setForm] = useState({ username: "", password: "" });
+export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const submit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
-      const res = await axios.post("login/", form);
-      localStorage.setItem("access", res.data.access);
-      navigate("/");
+      const res = await API.post('/auth/login/', {
+        username: email,
+        password,
+      });
+      localStorage.setItem('authToken', res.data.token);
+      navigate('/');
     } catch (err) {
-      alert("Login failed");
+      setError('Invalid credentials. Please try again.');
     }
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      <form onSubmit={submit}>
-        <input className="form-control my-2" type="text" placeholder="Username" onChange={e => setForm({ ...form, username: e.target.value })} />
-        <input className="form-control my-2" type="password" placeholder="Password" onChange={e => setForm({ ...form, password: e.target.value })} />
-        <button className="btn btn-primary">Login</button>
-      </form>
+    <div className="login-container">
+      <div className="login-box">
+        <h2 className="logo"><span>▶</span> Sign in</h2>
+        <p className="subtext">to continue to ytclone</p>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <form onSubmit={handleLogin} className="login-form">
+          <input
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="login-btn">
+            Sign In
+          </button>
+        </form>
+
+        <p className="signup-link">
+          Don’t have an account? <a href="/register">Create account</a>
+        </p>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}

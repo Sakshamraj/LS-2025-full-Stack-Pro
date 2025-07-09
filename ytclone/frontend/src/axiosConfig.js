@@ -1,17 +1,31 @@
-// File: ytclone/frontend/src/axiosConfig.js
-// This file was recently edited. Do not suggest code that has been deleted.
-import axios from "axios";
+import axios from 'axios';
 
-const instance = axios.create({
-  baseURL: "http://localhost:8000/api/",
+
+const API = axios.create({
+  baseURL: 'http://127.0.0.1:8000/api', 
+  withCredentials: true,
 });
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Token ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn('Unauthorized. Redirect to login or clear token.');
+     
+    }
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-export default instance;
+export default API;

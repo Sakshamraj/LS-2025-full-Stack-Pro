@@ -1,73 +1,45 @@
-// Navigation bar component
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./TopBar.css"; // Custom styles
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaSearch, FaMicrophone, FaVideo, FaBell, FaUserCircle } from 'react-icons/fa';
+import './Navbar.css'; 
 
-const Navbar = () => {
-  return (
-    <div className="d-flex align-items-center justify-content-between px-3 py-2 navbar-container">
-      {/* Left icons */}
-      <div className="d-flex gap-2">
-        <i className="bi bi-house-door-fill icon-style"></i>
-        <i className="bi bi-house-door-fill icon-style"></i>
-      </div>
-
-      {/* Search bar */}
-      <div className="search-bar d-flex align-items-center">
-        <span className="search-placeholder">Hinted search Video</span>
-        <i className="bi bi-search ms-auto"></i>
-      </div>
-
-      {/* Right button */}
-      <button className="btn custom-btn d-flex align-items-center">
-        <i className="bi bi-house-door-fill me-2"></i>
-        Label
-      </button>
-    </div>
-  );
-};
-
-export default Navbar;
-
-
-/*
-import React, { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
-import "./App.css";
-
-function App() {
-  const [isExpanded, setIsExpanded] = useState(window.innerWidth <= 720);
-
-  const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 720) {
-        setIsExpanded(false);
-      } else {
-        setIsExpanded(true);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+export default function Navbar() {
+  const navigate = useNavigate();
 
   return (
-    <div className="app-container">
-      <Sidebar isExpanded={isExpanded} />
-      <main className="main">
-        <button className="toggle-btn" onClick={toggleSidebar}>
-          ☰ Menu
+    <nav className="navbar flex items-center justify-between px-4 py-2 shadow-md bg-white sticky top-0 z-50">
+      {/* Left: Logo */}
+      <div className="flex items-center space-x-2">
+        <Link to="/" className="text-2xl text-yt-red font-bold tracking-tight">
+          <span style={{ color: '#FF0000' }}>▶</span> ytclone
+        </Link>
+      </div>
+
+      {/* Center: Search Bar */}
+      <div className="flex flex-1 max-w-xl mx-6">
+        <input
+          type="text"
+          placeholder="Search"
+          className="flex-1 px-4 py-1 border border-gray-300 rounded-l-full focus:outline-none"
+        />
+        <button className="bg-gray-100 px-4 py-2 border border-gray-300 border-l-0 rounded-r-full">
+          <FaSearch />
         </button>
-        <h1>Welcome</h1>
-        <p>This is the main content area.</p>
-      </main>
-    </div>
+        <button className="ml-2 p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+          <FaMicrophone />
+        </button>
+      </div>
+
+      {/* Right: Icons */}
+      <div className="flex items-center space-x-4 text-xl">
+        <Link to="/upload" title="Upload">
+          <FaVideo className="cursor-pointer hover:text-yt-red" />
+        </Link>
+        <FaBell className="cursor-pointer hover:text-yt-red" />
+        <Link to="/dashboard" title="Your Channel">
+          <FaUserCircle className="cursor-pointer text-2xl hover:text-yt-red" />
+        </Link>
+      </div>
+    </nav>
   );
 }
-
-export default App;
-
-*/
